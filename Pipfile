@@ -8,10 +8,9 @@ verify_ssl = true
 [packages]
 django = "*"
 apscheduler = "*"
-pyjwt = "*"
 graphene-django = "*"
 django-cors-headers = "*"
-imagekitio = "*"
+django-graphql-jwt = "*"
 
 [requires]
 python_version = "3.7"

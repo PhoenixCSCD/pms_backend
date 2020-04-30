@@ -4,7 +4,6 @@ import graphene
 import jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
-from django.contrib.auth.models import Group
 from graphene_django.types import DjangoObjectType
 
 from authentication.models import User
