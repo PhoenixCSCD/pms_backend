@@ -1,13 +1,15 @@
 import graphene
-import authentication.schema
-import core.schema
 
 
-class RootQuery(authentication.schema.Query, core.schema.Query):
+import pms.authentication.schema as authentication_schema
+import pms.core.schema as core_schema
+
+
+class RootQuery(authentication_schema.Query, core_schema.Query):
     pass
 
 
-class RootMutation(authentication.schema.Mutation, core.schema.Mutation):
+class RootMutation(authentication_schema.Mutation, core_schema.Mutation):
     pass
 
 

@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -16,13 +17,14 @@ INSTALLED_APPS = [
 
     # 3rd-Party apps
     'graphene_django',
+    'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
 
     # Local apps
-    'authentication.apps.AuthenticationConfig',
-    'core.apps.CoreConfig',
-    'dispensary.apps.DispensaryConfig',
-    'inventory.apps.InventoryConfig',
-    'notification.apps.NotificationConfig'
+    'pms.authentication.apps.AuthenticationConfig',
+    'pms.core.apps.CoreConfig',
+    # 'pms.dispensary.apps.DispensaryConfig',
+    # 'inventory.apps.InventoryConfig',
+    # 'notification.apps.NotificationConfig'
 ]
 
 MIDDLEWARE = [
@@ -84,7 +86,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'authentication.User'
+AUTH_USER_MODEL = 'core.User'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -97,4 +99,12 @@ GRAPHENE = {
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
+}
+
+GRAPHQL_JWT = {
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LONG_RUNNING_REFRESH_TOKEN': True,
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=60),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(hours=12),
+    'JWT_REUSE_REFRESH_TOKENS': True
 }
