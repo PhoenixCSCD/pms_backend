@@ -1,7 +1,14 @@
 import uuid
 
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth import get_user_model
+from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+
+
+class Branch(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    name = models.CharField(max_length=100)
 
 
 class UserManager(BaseUserManager):
@@ -35,6 +42,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     email = models.CharField(unique=True, max_length=50)
     first_name = models.CharField(max_length=50)
@@ -44,9 +52,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=100)
     is_staff = models.BooleanField(default=False)
 
-    avatar = models.URLField(null=True)
+    avatar = models.FilePathField(path="media/avatars/", null=True)
+
+    branches = models.ManyToManyField(Branch, related_name='users')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'gender', 'date_of_birth', 'phone_number']
 
     objects = UserManager()
+
+
+class Allergy(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    name = models.CharField(max_length=100)

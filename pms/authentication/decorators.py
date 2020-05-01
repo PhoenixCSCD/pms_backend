@@ -1,12 +1,16 @@
 from functools import wraps
+from typing import Callable, TypeVar
+
+T = TypeVar('T')
+Test = Callable[[T], bool]
 
 
-def user_passes_test(test, exception: Exception = None):
+def user_passes_test(test: Test, exception: Exception = None):
     def decorator(func):
         @wraps(func)
-        def wrapper(root, info, *args, **kwargs):
-            if test(info.context.user):
-                return func(root, info, *args, **kwargs)
+        def wrapper(_root, _info, *args, **kwargs):
+            if test(_info.context.user):
+                return func(_root, _info, *args, **kwargs)
 
             if exception is not None:
                 raise exception
@@ -19,7 +23,7 @@ def login_required():
     return user_passes_test(lambda user: user.is_authenticated, Exception("Authorization token was not provided"))
 
 
-def permission_required(perms: str):
+def permission_required(perms: str) -> bool:
     def check_perms(user) -> bool:
         if isinstance(perms, str):
             return user.has_perms((perms,))

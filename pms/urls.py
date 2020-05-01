@@ -5,5 +5,4 @@ from pms.schema import schema
 
 urlpatterns = [
     path('graphql/', csrf_exempt(GraphQLView.as_view(schema=schema, graphiql=True))),
-    path('core/', include('core.urls')),
 ]
