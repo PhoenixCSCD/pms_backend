@@ -1,15 +1,15 @@
 import graphene
-from authentication.schema import Query as AuthenticationQuery
-from core.schema import Query as CoreQuery
-from core.schema import Mutation as CoreMutation
+import authentication.schema
+import core.schema
 
 
-class RootQuery(AuthenticationQuery, CoreQuery):
+class RootQuery(authentication.schema.Query, core.schema.Query):
     pass
 
 
-class RootMutation(CoreMutation):
+class RootMutation(authentication.schema.Mutation, core.schema.Mutation):
     pass
 
 
+# noinspection PyTypeChecker
 schema = graphene.Schema(query=RootQuery, mutation=RootMutation)
