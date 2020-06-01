@@ -1,11 +1,11 @@
 import os
-from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INSTALLED_APPS = [
     # Priority
     'corsheaders',
+    'channels',
 
     # Django apps
     # 'django.contrib.admin',
@@ -18,12 +18,13 @@ INSTALLED_APPS = [
     # 3rd-Party apps
     'graphene_django',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
+    'graphene_subscriptions',
 
     # Local apps
     'pms.authentication.apps.AuthenticationConfig',
     'pms.core.apps.CoreConfig',
-    # 'pms.dispensary.apps.DispensaryConfig',
-    # 'inventory.apps.InventoryConfig',
+    'pms.dispensary.apps.DispensaryConfig',
+    'pms.inventory.apps.InventoryConfig',
     # 'notification.apps.NotificationConfig'
 ]
 
@@ -44,7 +45,7 @@ ROOT_URLCONF = 'pms.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['pms/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -58,6 +59,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pms.wsgi.application'
+ASGI_APPLICATION = 'pms.routing.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -84,6 +86,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'media'
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'core.User'
@@ -96,15 +100,26 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 GRAPHENE = {
+    'SCHEMA': 'pms.schema.schema',
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
 }
 
 GRAPHQL_JWT = {
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_LONG_RUNNING_REFRESH_TOKEN': True,
-    'JWT_EXPIRATION_DELTA': timedelta(minutes=60),
-    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(hours=12),
-    'JWT_REUSE_REFRESH_TOKENS': True
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_ALLOW_REFRESH': False,
 }
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'akabojohnkennedy@gmail.com'
+EMAIL_HOST_PASSWORD = 'JimmyNeutron@45'
+EMAIL_PORT = 587

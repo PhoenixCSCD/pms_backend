@@ -2,9 +2,11 @@ import graphene
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from graphene_django.types import DjangoObjectType
+from graphql_jwt.decorators import superuser_required, login_required
 
-from pms.core.models import User, Allergy
+from pms.core.models import User, Allergy, Drug, Image
 from .models import Branch
+from ..email import send_password_reset_email
 
 
 class BranchType(DjangoObjectType):
@@ -30,6 +32,11 @@ class PermissionType(DjangoObjectType):
 class AllergyType(DjangoObjectType):
     class Meta:
         model = Allergy
+
+
+class DrugType(DjangoObjectType):
+    class Meta:
+        model = Drug
 
 
 class AddGroup(graphene.Mutation):
@@ -116,6 +123,9 @@ class AddUser(graphene.Mutation):
         user.is_staff = True
         user.save()
         user.groups.add(*groups)
+
+        # send_password_reset_email(user)
+
         return AddUser(user=user)
 
 
@@ -162,6 +172,26 @@ class AddAllergy(graphene.Mutation):
         return AddAllergy(allergy= allergy)
 
 
+class AddDrug(graphene.Mutation):
+    class Arguments:
+        name = graphene.String()
+        selling_price = graphene.Decimal()
+        cost_price_per_pack = graphene.Decimal()
+        quantity_per_pack = graphene.Int()
+
+    drug = graphene.Field(DrugType)
+
+    @staticmethod
+    def mutate(_root, _info, name, selling_price, cost_price_per_pack, quantity_per_pack):
+        drug = Drug()
+        drug.name = name
+        drug.selling_price = selling_price
+        drug.cost_price_per_pack = cost_price_per_pack
+        drug.quantity_per_pack = quantity_per_pack
+        drug.save()
+        return AddDrug(drug=drug)
+
+
 class Mutation(graphene.ObjectType):
     # Groups
     add_group = AddGroup.Field()
@@ -175,12 +205,15 @@ class Mutation(graphene.ObjectType):
 
     add_allergy = AddAllergy.Field()
 
+    add_drug = AddDrug.Field()
+
 
 class Query(graphene.ObjectType):
     # User
     users = graphene.List(UserType)
     user_by_id = graphene.Field(UserType, user_id=graphene.UUID())
     user_by_email = graphene.Field(UserType, email=graphene.String())
+
     # Group
     groups = graphene.List(GroupType)
     group_by_id = graphene.Field(GroupType, group_id=graphene.Int())
@@ -194,27 +227,35 @@ class Query(graphene.ObjectType):
     # Allergy
     allergies = graphene.List(AllergyType)
 
+    # Drug
+    drugs = graphene.List(DrugType)
+
     @staticmethod
     def resolve_allergies(_root, _info):
         return Allergy.objects.all()
 
     @staticmethod
+    @superuser_required
     def resolve_groups(_root, _info):
         return Group.objects.all()
 
     @staticmethod
+    @superuser_required
     def resolve_group_by_id(_root, _info, group_id):
         return Group.objects.get(id=group_id)
 
     @staticmethod
+    @superuser_required
     def resolve_permissions(_root, _info):
         return Permission.objects.all()
 
     @staticmethod
+    @superuser_required
     def resolve_users(_root, _info):
         return User.objects.all()
 
     @staticmethod
+    @superuser_required
     def resolve_user_by_id(_root, _info, user_id):
         try:
             return User.objects.get(id=user_id)
@@ -231,3 +272,7 @@ class Query(graphene.ObjectType):
             return get_user_model().objects.get(email=email)
         except User.DoesNotExist:
             return None
+
+    @staticmethod
+    def resolve_drugs(_root, _info):
+        return Drug.objects.all()

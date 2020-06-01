@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 
 class Branch(models.Model):
@@ -65,3 +67,22 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Allergy(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=100)
+
+
+class Drug(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    name = models.CharField(max_length=250)
+    selling_price = models.DecimalField(max_digits=19, decimal_places=2)
+    cost_price_per_pack = models.DecimalField(max_digits=19, decimal_places=2)
+    quantity_per_pack = models.IntegerField(default=1)
+
+
+class Image(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    file = models.ImageField(upload_to='images')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+
+@receiver(pre_delete, sender=Image)
+def delete_image_on_disk(sender, instance, **_kwargs):
+    instance.file.delete(False)
