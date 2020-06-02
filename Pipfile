@@ -15,9 +15,9 @@ pillow = "*"
 channels = "*"
 incremental = "*"
 graphene-subscriptions = "*"
-gunicorn = "*"
 dj-database-url = "*"
 psycopg2-binary = "*"
+daphne = "*"
 
 [requires]
 # python_version = "3.8"
