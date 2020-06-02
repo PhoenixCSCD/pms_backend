@@ -18,6 +18,7 @@ graphene-subscriptions = "*"
 dj-database-url = "*"
 psycopg2-binary = "*"
 daphne = "*"
+channels-redis = "*"
 
 [requires]
 # python_version = "3.8"
