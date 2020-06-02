@@ -11,6 +11,12 @@ apscheduler = "*"
 graphene-django = "*"
 django-cors-headers = "*"
 django-graphql-jwt = "*"
+pillow = "*"
+channels = "*"
+incremental = "*"
+graphene-subscriptions = "*"
+gunicorn = "*"
+dj-database-url = "*"
 
 [requires]
-python_version = "3.7"
+# python_version = "3.8"

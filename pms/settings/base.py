@@ -5,6 +5,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 INSTALLED_APPS = [
     # Priority
     'corsheaders',
+    'channels',
 
     # Django apps
     # 'django.contrib.admin',
@@ -16,13 +17,15 @@ INSTALLED_APPS = [
 
     # 3rd-Party apps
     'graphene_django',
+    'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
+    'graphene_subscriptions',
 
     # Local apps
-    'authentication.apps.AuthenticationConfig',
-    'core.apps.CoreConfig',
-    'dispensary.apps.DispensaryConfig',
-    'inventory.apps.InventoryConfig',
-    'notification.apps.NotificationConfig'
+    'pms.authentication.apps.AuthenticationConfig',
+    'pms.core.apps.CoreConfig',
+    'pms.dispensary.apps.DispensaryConfig',
+    'pms.inventory.apps.InventoryConfig',
+    # 'notification.apps.NotificationConfig'
 ]
 
 MIDDLEWARE = [
@@ -42,7 +45,7 @@ ROOT_URLCONF = 'pms.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['pms/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -56,6 +59,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pms.wsgi.application'
+ASGI_APPLICATION = 'pms.routing.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -82,9 +86,11 @@ USE_L10N = True
 
 USE_TZ = True
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'media'
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'authentication.User'
+AUTH_USER_MODEL = 'core.User'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -94,7 +100,26 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 GRAPHENE = {
+    'SCHEMA': 'pms.schema.schema',
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
 }
+
+GRAPHQL_JWT = {
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_ALLOW_REFRESH': False,
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'akabojohnkennedy@gmail.com'
+EMAIL_HOST_PASSWORD = 'JimmyNeutron@45'
+EMAIL_PORT = 587
