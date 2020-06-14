@@ -71,8 +71,18 @@ class Stock(models.Model):
             lot_number=lot_number,
             defaults={'expiry_date': expiry_date}
         )
+        if cls.get_stock_level(drug_id=drug_id, lot_number=lot_number) + quantity < 0:
+            raise Exception('Stock Level is low!')
+
         stock.quantity += quantity
         stock.save()
+
+    @classmethod
+    def get_drug_lot_numbers(cls, drug_id, include_expired=False):
+        if include_expired:
+            return cls.objects.values_list('lot_number', flat=True).filter(drug_id=drug_id)
+        else:
+            return cls.objects.values_list('lot_number', flat=True).filter(drug_id=drug_id, expiry_date__gt=timezone.now())
 
 
 class Supply(models.Model):
@@ -96,3 +106,19 @@ class SupplyLine(models.Model):
     quantity = models.IntegerField()
     lot_number = models.CharField(max_length=100)
     cost_price = models.DecimalField(max_digits=19, decimal_places=2)
+
+
+class StockAdjustment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    timestamp = models.DateTimeField()
+    reason = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class StockAdjustmentLine(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    stock_adjustment = models.ForeignKey(StockAdjustment, on_delete=models.CASCADE)
+
+    drug = models.ForeignKey(Drug, on_delete=models.CASCADE)
+    lot_number = models.CharField(max_length=100)
+    quantity = models.IntegerField()

@@ -8,11 +8,13 @@ from pms.core.models import Image
 @require_POST
 @csrf_exempt
 def upload_image(request):
-    if request.POST['oldImage']:
+    if request.POST.get('oldImage'):
         old_image = Image.objects.get(file=request.POST['oldImage'])
         old_image.delete()
 
-    image = Image()
-    image.file = request.FILES['image']
-    image.save()
-    return JsonResponse({'image': image.file.name})
+    if request.POST.get('image'):
+        image = Image()
+        image.file = request.FILES['image']
+        image.save()
+        return JsonResponse({'image': image.file.name})
+    return JsonResponse({})
