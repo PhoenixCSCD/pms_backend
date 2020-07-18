@@ -96,6 +96,18 @@ class DeleteGroups(graphene.Mutation):
         return DeleteGroups(groups=None)
 
 
+class DeleteUsers(graphene.Mutation):
+    class Arguments:
+        user_ids = graphene.List(graphene.UUID)
+
+    user_ids = graphene.Field(graphene.UUID)
+
+    @staticmethod
+    def mutate(_root, _info, user_ids):
+        User.objects.filter(id__in=user_ids).delete()
+        return DeleteUsers(user_ids=None)
+
+
 class AddUser(graphene.Mutation):
     class Arguments:
         first_name = graphene.String()
@@ -200,6 +212,7 @@ class Mutation(graphene.ObjectType):
     delete_groups = DeleteGroups.Field()
 
     add_user = AddUser.Field()
+    delete_users = DeleteUsers.Field()
     add_branch = AddBranch.Field()
     add_user_branches = AddUserBranchesMutation.Field()
 

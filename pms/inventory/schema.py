@@ -1,11 +1,9 @@
 import graphene
 from django.db import transaction
-from django.utils import timezone
 from graphene_django.types import DjangoObjectType
 from rx import Observable
 
 from pms.core.models import Drug
-from pms.dispensary.models import Sale
 from pms.inventory.events import STOCK_LEVEL_CHANGE, LOT_STOCK_LEVEL_CHANGE
 from pms.inventory.models import Supply, SupplyLine, Stock, StockAdjustment, StockAdjustmentLine
 

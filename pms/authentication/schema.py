@@ -35,6 +35,7 @@ class VerifyPasswordResetToken(graphene.Mutation):
 class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
     has_permission = graphene.Boolean(permission=graphene.String())
+    email_exists = graphene.Boolean(email=graphene.String())
 
     @staticmethod
     @login_required
@@ -45,6 +46,10 @@ class Query(graphene.ObjectType):
     @login_required
     def resolve_has_permission(_root, _info, permission):
         return _info.context.user.has_perm(permission)
+
+    @staticmethod
+    def resolve_email_exists(_root, _info, email):
+        return User.objects.filter(email=email).exists()
 
 
 class Mutation(graphene.ObjectType):
