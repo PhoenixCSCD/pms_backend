@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group, Permission
 from graphene_django.types import DjangoObjectType
 from graphql_jwt.decorators import superuser_required, login_required
 
-from pms.core.models import User, Allergy, Drug, Image
+from pms.core.models import User, Allergy, Drug
 from .models import Branch
 from ..email import send_password_reset_email
 
@@ -96,6 +96,18 @@ class DeleteGroups(graphene.Mutation):
         return DeleteGroups(groups=None)
 
 
+class DeleteUsers(graphene.Mutation):
+    class Arguments:
+        user_ids = graphene.List(graphene.UUID)
+
+    user_ids = graphene.Field(graphene.UUID)
+
+    @staticmethod
+    def mutate(_root, _info, user_ids):
+        User.objects.filter(id__in=user_ids).delete()
+        return DeleteUsers(user_ids=None)
+
+
 class AddUser(graphene.Mutation):
     class Arguments:
         first_name = graphene.String()
@@ -124,9 +136,40 @@ class AddUser(graphene.Mutation):
         user.save()
         user.groups.add(*groups)
 
-        # send_password_reset_email(user)
+        send_password_reset_email(user)
 
         return AddUser(user=user)
+
+
+class EditUser(graphene.Mutation):
+    class Arguments:
+        user_id = graphene.UUID()
+        first_name = graphene.String()
+        last_name = graphene.String()
+        email = graphene.String()
+        gender = graphene.String()
+        date_of_birth = graphene.Date()
+        phone_number = graphene.String()
+        groups = graphene.List(graphene.Int)
+        avatar = graphene.String()
+
+    user = graphene.Field(UserType)
+
+    @staticmethod
+    def mutate(_root, _info, user_id, first_name, last_name, email, gender, date_of_birth, phone_number, groups, avatar):
+        user = User.objects.get(id=user_id)
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.gender = gender
+        user.date_of_birth = date_of_birth
+        user.phone_number = phone_number
+        user.avatar = avatar
+        user.groups.add(*groups)
+
+        # send_password_reset_email(user)
+
+        return EditUser(user=user)
 
 
 class AddBranch(graphene.Mutation):
@@ -169,7 +212,7 @@ class AddAllergy(graphene.Mutation):
         allergy = Allergy()
         allergy.name = name
         allergy.save()
-        return AddAllergy(allergy= allergy)
+        return AddAllergy(allergy=allergy)
 
 
 class AddDrug(graphene.Mutation):
@@ -200,6 +243,8 @@ class Mutation(graphene.ObjectType):
     delete_groups = DeleteGroups.Field()
 
     add_user = AddUser.Field()
+    edit_user = EditUser.Field()
+    delete_users = DeleteUsers.Field()
     add_branch = AddBranch.Field()
     add_user_branches = AddUserBranchesMutation.Field()
 

@@ -1,5 +1,8 @@
+import datetime
+
 import graphene
 from django.db import transaction
+from django.utils import timezone
 from graphene_django import DjangoObjectType
 
 from pms.dispensary.models import Sale, SaleLine
@@ -69,7 +72,12 @@ class Mutation(graphene.ObjectType):
 
 class Query(graphene.ObjectType):
     sales = graphene.List(SaleType)
+    today_sales = graphene.List(SaleType)
 
     @staticmethod
     def resolve_sales(_root, _info):
         return Sale.objects.all()
+
+    @staticmethod
+    def resolve_today_sales(_root, _info):
+        return Sale.objects.filter(timestamp__month=5)

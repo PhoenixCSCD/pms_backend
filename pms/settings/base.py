@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'graphene_django',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'graphene_subscriptions',
+    'cloudinary',
 
     # Local apps
     'pms.authentication.apps.AuthenticationConfig',

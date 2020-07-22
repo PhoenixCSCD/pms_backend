@@ -38,6 +38,7 @@ class UserManager(BaseUserManager):
             password=password
         )
         user.is_staff = True
+        user.is_superuser=True
         user.save(using=self._db)
         return user
 
@@ -54,7 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=100)
     is_staff = models.BooleanField(default=False)
 
-    avatar = models.FilePathField(path="media/avatars/", null=True)
+    avatar = models.URLField(null=True)
 
     branches = models.ManyToManyField(Branch, related_name='users')
 
@@ -75,14 +76,3 @@ class Drug(models.Model):
     selling_price = models.DecimalField(max_digits=19, decimal_places=2)
     cost_price_per_pack = models.DecimalField(max_digits=19, decimal_places=2)
     quantity_per_pack = models.IntegerField(default=1)
-
-
-class Image(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    file = models.ImageField(upload_to='images')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-
-
-@receiver(pre_delete, sender=Image)
-def delete_image_on_disk(sender, instance, **_kwargs):
-    instance.file.delete(False)
