@@ -20,3 +20,5 @@ CHANNEL_LAYERS = {
         }
     }
 }
+PASSWORD_RESET_URL = os.getenv('PASSWORD_RESET_URL')
+
