@@ -1,20 +1,15 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-
-from pms.core.models import Image
+from cloudinary import uploader as cloudinary_uploader
 
 
 @require_POST
 @csrf_exempt
-def upload_image(request):
-    if request.POST.get('oldImage'):
-        old_image = Image.objects.get(file=request.POST['oldImage'])
-        old_image.delete()
+def upload_file(request):
+    # if request.POST.get('oldImage'):
 
-    if request.POST.get('image'):
-        image = Image()
-        image.file = request.FILES['image']
-        image.save()
-        return JsonResponse({'image': image.file.name})
-    return JsonResponse({})
+    response = {}
+    if request.FILES.get('file'):
+        response = cloudinary_uploader.upload(request.FILES.get('file'))
+    return JsonResponse(response)

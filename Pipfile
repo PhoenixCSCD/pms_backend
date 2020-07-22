@@ -7,7 +7,6 @@ verify_ssl = true
 
 [packages]
 django = "*"
-apscheduler = "*"
 graphene-django = "*"
 django-cors-headers = "*"
 django-graphql-jwt = "*"
@@ -19,6 +18,7 @@ dj-database-url = "*"
 psycopg2-binary = "*"
 daphne = "*"
 channels-redis = "*"
+cloudinary = "*"
 
 [requires]
 # python_version = "3.8"

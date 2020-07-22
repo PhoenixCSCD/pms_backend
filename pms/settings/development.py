@@ -26,3 +26,5 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
+
+PASSWORD_RESET_URL = 'http://localhost:8080/#/auth/reset-password'
