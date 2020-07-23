@@ -7,7 +7,7 @@ from django.conf import settings
 
 def _send_email(subject, body, recipient_list, is_html_body=False):
     data = {
-               'from': 'Apryz Mail <mailgun@mail.apryz.com>',
+               'from': 'PMS <mailgun@sandboxb04b0169e10041ce896d9c8bf84f4406.mailgun.org>',
                'to': recipient_list,
                'subject': subject,
            }
