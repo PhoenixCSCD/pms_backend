@@ -30,7 +30,7 @@ def send_password_reset_email(user):
     _send_email(
         subject='Account Confirmation',
         recipient_list=[user.email],
-        is_html_body=False,
+        is_html_body=True,
         body=render_to_string('account_created.html', {
             'reset_url': f'{settings.PASSWORD_RESET_URL}?email={user.email}&token={token}'
         })
