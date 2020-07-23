@@ -14,10 +14,10 @@ DATABASES = {
 
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        'CONFIG': {
-            'hosts': [os.getenv('REDIS_URL')]
-        }
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        # 'CONFIG': {
+        #     'hosts': [os.getenv('REDIS_URL')]
+        # }
     }
 }
 PASSWORD_RESET_URL = os.getenv('PASSWORD_RESET_URL')
