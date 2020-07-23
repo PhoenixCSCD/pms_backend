@@ -64,8 +64,8 @@ class EditGroup(graphene.Mutation):
     group = graphene.Field(GroupType)
 
     @staticmethod
-    def mutate(_root, _info, group_id, name, permissions):
-        group = Group.objects.get(id=group_id)
+    def mutate(_root, _info, id, name, permissions):
+        group = Group.objects.get(id=id)
         group.name = name
         group.permissions.set(permissions)
         group.save()
