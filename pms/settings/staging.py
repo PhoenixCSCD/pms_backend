@@ -11,3 +11,14 @@ ALLOWED_HOSTS = ['phoenix-pms.herokuapp.com']
 DATABASES = {
     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        'CONFIG': {
+            'hosts': [os.getenv('REDIS_URL')]
+        }
+    }
+}
+PASSWORD_RESET_URL = os.getenv('PASSWORD_RESET_URL')
+

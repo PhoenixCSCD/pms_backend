@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'graphene_django',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'graphene_subscriptions',
+    'cloudinary',
 
     # Local apps
     'pms.authentication.apps.AuthenticationConfig',
@@ -111,15 +112,9 @@ GRAPHQL_JWT = {
     'JWT_ALLOW_REFRESH': False,
 }
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
-}
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'akabojohnkennedy@gmail.com'
-EMAIL_HOST_PASSWORD = 'JimmyNeutron@45'
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST_USER = 'postmaster@mail.apryz.com'
+EMAIL_HOST_PASSWORD = '6ac5435ebdcaa07f6aeb929b7c1bd175-ffefc4e4-95ba06b8'
 EMAIL_PORT = 587
