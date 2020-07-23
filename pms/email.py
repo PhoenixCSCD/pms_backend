@@ -17,7 +17,7 @@ def _send_email(subject, body, recipient_list, is_html_body=False):
         data['text'] = body
 
     return requests.post(
-        url="https://api.mailgun.net/v3/sandboxb04b0169e10041ce896d9c8bf84f4406.mailgun.org/messages",
+        url='https://api.mailgun.net/v3/sandboxb04b0169e10041ce896d9c8bf84f4406.mailgun.org/messages',
         auth=('api', settings.MAILGUN_API_KEY),
         data=data
     )
