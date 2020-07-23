@@ -133,9 +133,14 @@ class Mutation(graphene.ObjectType):
 
 
 class Query(graphene.ObjectType):
+    stock_adjustments = graphene.List(StockAdjustmentType)
     supplies = graphene.List(SupplyType)
     stock_level = graphene.Int(drug_id=graphene.UUID(required=True), lot_number=graphene.String())
     drug_lot_numbers = graphene.List(graphene.String, drug_id=graphene.UUID(required=True))
+
+    @staticmethod
+    def resolve_stock_adjustments(_root, _info):
+        return StockAdjustment.objects.all()
 
     @staticmethod
     def resolve_supplies(_root, _info):
