@@ -165,6 +165,7 @@ class EditUser(graphene.Mutation):
         user.date_of_birth = date_of_birth
         user.phone_number = phone_number
         user.avatar = avatar
+        user.save()
         user.groups.add(*groups)
 
         # send_password_reset_email(user)
