@@ -112,9 +112,5 @@ GRAPHQL_JWT = {
     'JWT_ALLOW_REFRESH': False,
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.mailgun.org'
-EMAIL_HOST_USER = 'postmaster@mail.apryz.com'
-EMAIL_HOST_PASSWORD = '6ac5435ebdcaa07f6aeb929b7c1bd175-ffefc4e4-95ba06b8'
-EMAIL_PORT = 587
+MAILGUN_API_URL = os.getenv('MAILGUN_API_URL')
+MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
