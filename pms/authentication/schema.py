@@ -33,7 +33,6 @@ class ResetPassword(graphene.Mutation):
         return cls(ok=True)
 
 
-
 class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
     has_permission = graphene.Boolean(permission=graphene.String())
