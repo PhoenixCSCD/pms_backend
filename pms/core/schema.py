@@ -291,17 +291,17 @@ class Query(graphene.ObjectType):
         return Group.objects.get(id=group_id)
 
     @staticmethod
-    @superuser_required
+    # @superuser_required
     def resolve_permissions(_root, _info):
         return Permission.objects.all()
 
     @staticmethod
-    @superuser_required
+    # @superuser_required
     def resolve_users(_root, _info):
         return User.objects.all()
 
     @staticmethod
-    @superuser_required
+    # @superuser_required
     def resolve_user_by_id(_root, _info, user_id):
         try:
             return User.objects.get(id=user_id)
