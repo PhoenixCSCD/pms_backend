@@ -281,7 +281,7 @@ class Query(graphene.ObjectType):
         return Allergy.objects.all()
 
     @staticmethod
-    @superuser_required
+    # @superuser_required
     def resolve_groups(_root, _info):
         return Group.objects.all()
 
